@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./_docker_volumes/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=P@ssw0rd!
+  java:
+    # image: openjdk:21-jdk
+    ports:
+      - 8000:8080
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/opt/app
+    # - ./backend/.mvn:/opt/app/.mvn
+    # - ./backend/build:/opt/app/build
+    # - ./backend/src:/opt/app/src
+    # - ./backend/target:/opt/app/target
+    command: tail -f /dev/null
