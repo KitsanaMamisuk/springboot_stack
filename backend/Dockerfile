@@ -1,14 +1,25 @@
-FROM maven:3.9.9-eclipse-temurin-21
+# https://medium.com/@kishieel/dockerize-your-spring-boot-application-with-hot-reloading-44ada09adf20
+FROM maven:3.9.9-eclipse-temurin-17 AS dev
 WORKDIR /opt/app
-COPY . .
-# Copy the built JAR file from the previous stage
-# COPY --from=build /app/target/*.jar app.jar
 
-# Expose the port your Spring Boot app runs on
+RUN apt clean all
+# RUN apt-get update && apt-get install -y \
+#     libc6 \
+#     libgcc1 \
+#     libstdc++6 \
+#     zlib1g \
+#     && rm -rf /var/lib/apt/lists/*
+
+RUN apt update
+RUN apt upgrade -y
+RUN apt install -y inotify-tools gcc
+
+COPY . .
+
+RUN ulimit -c unlimited
+
+RUN chmod +x /opt/app/docker-entrypoint.sh
+
 EXPOSE 8080
 
-# # Run the Spring Boot application
-# CMD ["java", "-jar", "app.jar"]
-
-# java -jar /opt/app/target/backend-0.0.1-SNAPSHOT.jar
-# cd src/main/java/com/spring_boot_stack/backend/controllers/
+ENTRYPOINT ["./docker-entrypoint.sh"]
