@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-_docker_volumes
+_docker_volumes/
